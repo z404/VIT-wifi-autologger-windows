@@ -106,34 +106,37 @@ class MainWindow:
     def OnTaskbarNotify(self, hwnd, msg, wparam, lparam):
         if lparam == win32con.WM_LBUTTONUP:
             # print("You clicked me.")
-            wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
-            data = wifi.decode('utf-8')
-            if "VIT2.4G" in data or "VIT5G" in data:
-                print("Connected to VIT Wifi!")
-                url = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://www.msftconnecttest.com/redirect"
+            try:
+                wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
+                data = wifi.decode('utf-8')
+                if "VIT2.4G" in data or "VIT5G" in data:
+                    print("Connected to VIT Wifi!")
+                    url = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://www.msftconnecttest.com/redirect"
 
-                headers = CaseInsensitiveDict()
-                headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"
-                headers["Accept-Language"] = "en-US,en;q=0.9"
-                headers["Cache-Control"] = "max-age=0"
-                headers["Connection"] = "keep-alive"
-                headers["Content-Type"] = "application/x-www-form-urlencoded"
-                headers["Origin"] = "http://phc.prontonetworks.com"
-                headers["Referer"] = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://google.com/"
-                headers["Sec-GPC"] = "1"
-                headers["Upgrade-Insecure-Requests"] = "1"
-                headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+                    headers = CaseInsensitiveDict()
+                    headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"
+                    headers["Accept-Language"] = "en-US,en;q=0.9"
+                    headers["Cache-Control"] = "max-age=0"
+                    headers["Connection"] = "keep-alive"
+                    headers["Content-Type"] = "application/x-www-form-urlencoded"
+                    headers["Origin"] = "http://phc.prontonetworks.com"
+                    headers["Referer"] = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://google.com/"
+                    headers["Sec-GPC"] = "1"
+                    headers["Upgrade-Insecure-Requests"] = "1"
+                    headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
 
-                data = "userId="+config["username"]+"&password="+config["password"]+"&serviceName=ProntoAuthentication&Submit22=Login"
+                    data = "userId="+config["username"]+"&password="+config["password"]+"&serviceName=ProntoAuthentication&Submit22=Login"
 
 
-                resp = requests.post(url, headers=headers, data=data)
-                if resp.status_code == 200:
-                    print("Logged in!")
+                    resp = requests.post(url, headers=headers, data=data)
+                    if resp.status_code == 200:
+                        print("Logged in!")
+                    else:
+                        print("Failed to login!")
                 else:
-                    print("Failed to login!")
-            else:
-                print("Not connected to VIT wifi")
+                    print("Not connected to VIT wifi")
+            except Exception as e:
+                print("Something went wrong, is VIT wifi down?")
 
         # elif lparam == win32con.WM_LBUTTONDBLCLK:
         #     # print("You double-clicked me - goodbye")
@@ -141,7 +144,7 @@ class MainWindow:
         #     requests.get("http://phc.prontonetworks.com/cgi-bin/authlogout?blank=")
         #     print("Logged out!")
         elif lparam == win32con.WM_RBUTTONUP:
-            print("You right clicked me.")
+            # print("You right clicked me.")
             menu = win32gui.CreatePopupMenu()
             win32gui.AppendMenu(menu, win32con.MF_STRING, 1023, "Login to Wifi")
             win32gui.AppendMenu(menu, win32con.MF_STRING, 1024, "Log Out of Wifi")
@@ -158,37 +161,48 @@ class MainWindow:
     def OnCommand(self, hwnd, msg, wparam, lparam):
         id = win32api.LOWORD(wparam)
         if id == 1023:
-            wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
-            data = wifi.decode('utf-8')
-            if "VIT2.4G" in data or "VIT5G" in data:
-                print("Connected to VIT Wifi!")
-                url = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://www.msftconnecttest.com/redirect"
+            try:
+                wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
+                data = wifi.decode('utf-8')
+                if "VIT2.4G" in data or "VIT5G" in data:
+                    print("Connected to VIT Wifi!")
+                    url = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://www.msftconnecttest.com/redirect"
 
-                headers = CaseInsensitiveDict()
-                headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"
-                headers["Accept-Language"] = "en-US,en;q=0.9"
-                headers["Cache-Control"] = "max-age=0"
-                headers["Connection"] = "keep-alive"
-                headers["Content-Type"] = "application/x-www-form-urlencoded"
-                headers["Origin"] = "http://phc.prontonetworks.com"
-                headers["Referer"] = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://google.com/"
-                headers["Sec-GPC"] = "1"
-                headers["Upgrade-Insecure-Requests"] = "1"
-                headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+                    headers = CaseInsensitiveDict()
+                    headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"
+                    headers["Accept-Language"] = "en-US,en;q=0.9"
+                    headers["Cache-Control"] = "max-age=0"
+                    headers["Connection"] = "keep-alive"
+                    headers["Content-Type"] = "application/x-www-form-urlencoded"
+                    headers["Origin"] = "http://phc.prontonetworks.com"
+                    headers["Referer"] = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://google.com/"
+                    headers["Sec-GPC"] = "1"
+                    headers["Upgrade-Insecure-Requests"] = "1"
+                    headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
 
-                data = "userId="+config["username"]+"&password="+config["password"]+"&serviceName=ProntoAuthentication&Submit22=Login"
+                    data = "userId="+config["username"]+"&password="+config["password"]+"&serviceName=ProntoAuthentication&Submit22=Login"
 
 
-                resp = requests.post(url, headers=headers, data=data)
-                if resp.status_code == 200:
-                    print("Logged in!")
+                    resp = requests.post(url, headers=headers, data=data)
+                    if resp.status_code == 200:
+                        print("Logged in!")
+                    else:
+                        print("Failed to login!")
                 else:
-                    print("Failed to login!")
-            else:
-                print("Not connected to VIT wifi")
+                    print("Not connected to VIT wifi")
+            except Exception as e:
+                print("Something went wrong, is VIT wifi down?")
         elif id == 1024:
-            requests.get("http://phc.prontonetworks.com/cgi-bin/authlogout?blank=")
-            print("Logged out!")
+            try:
+                wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
+                data = wifi.decode('utf-8')
+                if "VIT2.4G" in data or "VIT5G" in data:
+                    requests.get("http://phc.prontonetworks.com/cgi-bin/authlogout?blank=")
+                    print("Logged out!")
+                else:
+                    print("Not connected to VIT wifi")
+            except Exception as e:
+                print("Something went wrong, is VIT wifi down?")
         elif id == 1025:
             print("Goodbye")
             win32gui.DestroyWindow(self.hwnd)
