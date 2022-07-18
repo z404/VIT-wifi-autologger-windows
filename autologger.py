@@ -10,7 +10,6 @@ from dotenv import dotenv_values
 
 config = dotenv_values()
 
-
 class MainWindow:
     def __init__(self):
         msg_TaskbarRestart = win32gui.RegisterWindowMessage("TaskbarCreated")
@@ -58,12 +57,12 @@ class MainWindow:
         # Try and find a custom icon
         hinst = win32api.GetModuleHandle(None)
         try:
-            iconPathName = os.path.abspath(os.path.join(os.path.join(os.getcwd(), "icon"), "logo.ico"))
+            iconPathName = os.path.abspath(config["pathtoicon"])
         except:
             iconPathName = os.path.abspath(
                 os.path.join(os.path.split(sys.executable)[0], "pyc.ico")
             )
-        print(iconPathName)
+        # print(iconPathName)
         if not os.path.isfile(iconPathName):
             # Look in DLLs dir, a-la py 2.5
             iconPathName = os.path.abspath(
@@ -79,9 +78,9 @@ class MainWindow:
             hicon = win32gui.LoadImage(
                 hinst, iconPathName, win32con.IMAGE_ICON, 0, 0, icon_flags
             )
-            print(hicon)
+            # print(hicon)
         else:
-            print("Can't find a Python icon file - using default")
+            # print("Can't find a Python icon file - using default")
             hicon = win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
 
         flags = win32gui.NIF_ICON | win32gui.NIF_MESSAGE | win32gui.NIF_TIP
